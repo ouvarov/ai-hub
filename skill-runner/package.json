@@ -1,0 +1,21 @@
+{
+  "name": "skill-runner",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "predeploy": "node scripts/bundle-docs.js",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.26.0",
+    "agents": "^0.7.5",
+    "node-html-parser": "^7.1.0",
+    "yaml": "^2.3.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^4.75.0"
+  }
+}

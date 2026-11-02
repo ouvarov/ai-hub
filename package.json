@@ -1,0 +1,24 @@
+{
+  "name": "acme-ai-hub",
+  "private": true,
+  "scripts": {
+    "dev:gateway": "pnpm --filter gateway dev",
+    "deploy:gateway": "pnpm --filter gateway deploy",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p skill-runner && tsc --noEmit -p agent-runner && tsc --noEmit -p gateway && tsc --noEmit -p tsconfig.test.json"
+  },
+  "dependencies": {
+    "node-html-parser": "^7.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.1.1",
+    "eslint": "^10.6.0",
+    "globals": "^17.7.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.63.0",
+    "vitest": "^4.1.10",
+    "wrangler": "^4.75.0"
+  }
+}

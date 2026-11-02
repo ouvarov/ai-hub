@@ -1,0 +1,14 @@
+node_modules/
+.wrangler/
+.idea/
+.DS_Store
+# Local Vault tokens for wrangler dev (per-user, never commit)
+.dev.vars
+#examples directory (contains generated code, not source code)
+examples/
+# Local Claude Code settings (per-user MCP server config)
+.claude/settings.local.json
+scripts-test/
+
+# BMAD output artifacts (generated per-session, not committed)
+_bmad-output/

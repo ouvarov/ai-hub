@@ -1,0 +1,55 @@
+{
+  // account_id comes from CLOUDFLARE_ACCOUNT_ID env var or wrangler CLI flag
+  "name": "hub-skill-runner",
+  "main": "src/index.ts",
+  // Resolve @shared/* → ../_shared/* so we avoid ugly ../../ imports
+  "alias": {
+    "@shared": "../_shared"
+  },
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // SECURITY: the runner must be reachable ONLY through the gateway's service
+  // binding — never from the public internet. The gateway wraps it in the
+  // Authentik OAuth gate and attaches the X-User-* identity headers the skills
+  // trust; a public workers.dev or preview URL bypasses that gate. Keep both false.
+  "workers_dev": false,
+  "preview_urls": false,
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MCP_OBJECT",
+        "class_name": "SkillRunnerMCP"
+      },
+      // Builder pipeline progress, addressed by runId. It cannot live in MCP_OBJECT:
+      // that DO is addressed by the MCP session id, which MCP 2026-07-28 removed.
+      {
+        "name": "BUILDER_RUNS",
+        "class_name": "BuilderRunState"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["SkillRunnerMCP"]
+    },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": ["BuilderRunState"]
+    }
+  ],
+  "vars": {
+    "GATEWAY_URL": "https://ai-hub.example.com"
+  },
+  // Gateway service binding — used to fetch secrets from Vault via gateway
+  "services": [
+    {
+      "binding": "GATEWAY",
+      "service": "hub-gateway"
+    },
+    {
+      "binding": "AGENT_RUNNER",
+      "service": "hub-agent-runner"
+    }
+  ]
+}

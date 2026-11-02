@@ -1,0 +1,52 @@
+{
+  // account_id comes from CLOUDFLARE_ACCOUNT_ID env var or wrangler CLI flag
+  "name": "hub-agent-runner",
+  "main": "src/index.ts",
+  // Resolve @shared/* → ../_shared/* so we avoid ugly ../../ imports
+  "alias": {
+    "@shared": "../_shared"
+  },
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // SECURITY: the runner must be reachable ONLY through the gateway's service
+  // binding — never from the public internet. Its /actions/:name route performs
+  // NO auth of its own (the API-key gate lives in the gateway) and it trusts the
+  // X-User-* identity headers the gateway attaches. A public workers.dev or
+  // preview URL bypasses both gates: an unauthenticated caller could invoke any
+  // action and forge X-User-Email to read another person's data. Keep both false.
+  "workers_dev": false,
+  "preview_urls": false,
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MCP_OBJECT",
+        "class_name": "AgentRunnerMCP"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["AgentRunnerMCP"]
+    }
+  ],
+  "dev": {
+    "port": 8788
+  },
+  // Cron-jobs scheduler: one master tick drives the crons registry (see the
+  // scheduled() handler in src/index.ts). One trigger regardless of job count
+  // keeps us well under the 250-triggers-per-account limit.
+  "triggers": {
+    "crons": ["* * * * *"]
+  },
+  "vars": {
+    "GATEWAY_URL": "https://ai-hub.example.com"
+  },
+  // Gateway service binding — used to fetch secrets from Vault via gateway /__internal/secrets
+  "services": [
+    {
+      "binding": "GATEWAY",
+      "service": "hub-gateway"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  // account_id comes from CLOUDFLARE_ACCOUNT_ID env var or wrangler CLI flag
+  "name": "hub-gateway",
+  "main": "src/index.ts",
+  "alias": {
+    "@shared": "../_shared"
+  },
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "custom_domains": [
+    { "hostname": "ai-hub.example.com" }
+  ],
+  // OAuth token storage — used by @cloudflare/workers-oauth-provider
+  // Create with: wrangler kv namespace create OAUTH_KV
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "REPLACE_ME_OAUTH_KV_ID"
+    }
+  ],
+  // Vault: VAULT_TOKEN set via `wrangler secret put VAULT_TOKEN`
+  // VAULT_ADDR and VAULT_MOUNT are hardcoded in _shared/lib/vault.ts
+  "services": [
+    {
+      "binding": "SKILL_RUNNER",
+      "service": "hub-skill-runner"
+    },
+    {
+      "binding": "AGENT_RUNNER",
+      "service": "hub-agent-runner"
+    }
+  ],
+  // Vault VPC binding — routes to Vault through Cloudflare Tunnel
+  // wrangler dev: binding exists but marked "remote" → wrangler connects to real tunnel
+  // wrangler deploy: binding routes through Cloudflare network
+  "vpc_services": [
+    {
+      "binding": "VAULT_SERVICE",
+      "service_id": "REPLACE_ME_VPC_SERVICE_ID"
+    }
+  ]
+}

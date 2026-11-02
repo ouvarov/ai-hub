@@ -1,0 +1,11 @@
+packages:
+  - "gateway"
+  - "*"
+  - "!_template"
+
+# pnpm >= 10 blocks postinstall scripts unless allowed; these four need them.
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: true
+  core-js-pure: true

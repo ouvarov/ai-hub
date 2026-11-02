@@ -1,0 +1,18 @@
+{
+  "name": "gateway",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@cloudflare/agents": "^0.0.16",
+    "@cloudflare/workers-oauth-provider": "^0.3.0",
+    "@modelcontextprotocol/sdk": "^1.11.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^4.75.0"
+  }
+}
